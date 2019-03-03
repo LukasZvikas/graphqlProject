@@ -1,39 +1,89 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const graphqlHttp = require("graphql-express");
+const graphqlHttp = require("express-graphql");
+const mongoose = require("mongoose");
 const { buildSchema } = require("graphql");
+const keys = require("./config/keys");
+const Event = require("./models/event");
 
 const app = express();
 
-app.use(bodyParser);
+app.use(bodyParser.json());
 
-app.use("/graphql", {
-  schema: buildSchema(`
-        rootQuery: {
-            events: [String!]!
+app.use(
+  "/graphql",
+  graphqlHttp({
+    schema: buildSchema(`
+        type Event {
+          _id: ID!
+          title: String!
+          description: String!
+          price: Float!
+          date: String!
         }
-
-        rootMutation: {
-            getEvent(name: String) String
+        input EventInput {
+          title: String!
+          description: String!
+          price: Float!
+          date: String!
         }
-
-        schema: {
+        type RootQuery {
+            events: [Event!]!
+        }
+        type RootMutation {
+            createEvent(eventInput: EventInput): Event
+        }
+        schema {
             query: RootQuery
             mutation: RootMutation
         }
     `),
-  rootValue: {
-    events: () => {
-      return ["Walkin", "Reading", "Sleeping"];
+    rootValue: {
+      events: () => {
+        return Event.find()
+          .then(events => {
+            return events.map(event => {
+              return { ...event._doc, _id: event.id };
+            });
+          })
+          .catch(err => {
+            throw err;
+          });
+      },
+      createEvent: args => {
+        const event = new Event({
+          title: args.eventInput.title,
+          description: args.eventInput.description,
+          price: +args.eventInput.price,
+          date: new Date(args.eventInput.date)
+        });
+        return event
+          .save()
+          .then(result => {
+            console.log(result);
+            return { ...result._doc, _id: result._doc._id.toString() };
+          })
+          .catch(err => {
+            console.log(err);
+            throw err;
+          });
+      }
     },
-    getEvents: args => {
-      const name = args.name;
-      return name;
-    }
-  },
-  graphiql: true
-});
+    graphiql: true
+  })
+);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT);
+mongoose
+  .connect(
+    `mongodb://${keys.MONGO_USERNAME}:${
+      keys.MONGO_PASSWORD
+    }@ds155815.mlab.com:55815/graphql`
+  )
+  .then(() => {
+    app.listen(PORT);
+  })
+  .catch(err => {
+    console.log(err);
+  });
