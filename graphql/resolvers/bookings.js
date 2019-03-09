@@ -14,8 +14,10 @@ module.exports = {
   },
 
   createBooking: async args => {
+    if (!req.isAuth) {
+      throw new Error("User is not authenticated");
+    }
     try {
-      console.log("ARGS", args.eventId);
       const eventId = await Event.findById(args.eventId)
         .then(event => {
           return event;
@@ -35,6 +37,9 @@ module.exports = {
     }
   },
   deleteBooking: async args => {
+    if (!req.isAuth) {
+      throw new Error("User is not authenticated");
+    }
     const booking = await Booking.findById(args.bookingId).populate("event");
     const event = transformEvent(booking.event);
     await Booking.deleteOne({ _id: args.bookingId });

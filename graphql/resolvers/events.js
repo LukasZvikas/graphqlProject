@@ -20,6 +20,9 @@ module.exports = {
   },
 
   createEvent: async args => {
+    if (!req.isAuth) {
+      throw new Error("User is not authenticated");
+    }
     const event = new Event({
       title: args.eventInput.title,
       description: args.eventInput.description,

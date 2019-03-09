@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../../models/user");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   createUser: async args => {
@@ -11,6 +12,7 @@ module.exports = {
       const hashedPassword = await bcrypt.hash(args.userInput.password, 12);
 
       const user = new User({
+        userName: args.userInput.userName,
         email: args.userInput.email,
         password: hashedPassword
       });
@@ -21,5 +23,29 @@ module.exports = {
     } catch (err) {
       throw err;
     }
+  },
+  loginUser: async ({ userName, password }, req) => {
+    if (!req.isAuth) {
+      throw new Error("User is not authenticated");
+    }
+    const user = await User.findOne({ userName });
+
+    if (!user) {
+      throw new Error("User was not found");
+    }
+
+    const passwordCheck = await bcrypt.compare(password, user.password);
+
+    if (!passwordCheck) {
+      throw new Error("User was not found");
+    }
+
+    const token = await jwt.sign(
+      { userId: user.id, email: user.email },
+      "superSecret",
+      { expiresIn: "1h" }
+    );
+
+    return { userId: user.id, token, tokenExpiration: 1 };
   }
 };

@@ -6,8 +6,11 @@ const keys = require("./config/keys");
 const graphqlSchema = require("./graphql/schema");
 const graphqlResolvers = require("./graphql/resolvers");
 const app = express();
+const { isAuth } = require("./middleware/isAuth");
 
 app.use(bodyParser.json());
+
+app.use(isAuth);
 
 app.use(
   "/graphql",

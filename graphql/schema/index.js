@@ -39,9 +39,16 @@ input UserInput {
   email: String!
 }
 
+type AuthData {
+  userId: ID!
+  token: String!
+  tokenExpiration: Int!
+}
+
 type RootQuery {
     events: [Event!]!
     bookings: [Booking!]!
+    loginUser(userName: String!, password: String!): AuthData!
 }
 type RootMutation {
     createEvent(eventInput: EventInput): Event
