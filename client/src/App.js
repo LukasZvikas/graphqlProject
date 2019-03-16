@@ -10,12 +10,12 @@ class App extends Component {
       <React.Fragment>
         <Header />
         <div className="main-content">
-        <Switch>
-          <Route path="/" component={null} exact />
-          <Route path="/auth" component={Login} />
-          <Route path="/events" component={null} />
-          <Route path="/bookings" component={null} />
-        </Switch>
+          <Switch>
+            <Route path="/" component={null} exact />
+            <Route path="/auth" component={Login} />
+            <Route path="/events" component={null} />
+            <Route path="/bookings" component={null} />
+          </Switch>
         </div>
       </React.Fragment>
     );

@@ -25,9 +25,6 @@ module.exports = {
     }
   },
   loginUser: async ({ userName, password }, req) => {
-    if (!req.isAuth) {
-      throw new Error("User is not authenticated");
-    }
     const user = await User.findOne({ userName });
 
     if (!user) {

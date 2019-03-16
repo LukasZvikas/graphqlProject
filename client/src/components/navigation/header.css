@@ -29,7 +29,6 @@
 }
 
 .navigation__links a:hover,
-.navigation__links a.active
-{
+.navigation__links a.active {
   color: goldenrod;
 }

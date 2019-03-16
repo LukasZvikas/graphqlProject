@@ -1,0 +1,41 @@
+.form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.form-control label,
+.form-control input {
+  display: block;
+  width: 20rem;
+  height: 1.5rem;
+
+}
+
+.form-control {
+  margin-bottom: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.form-actions button {
+  font-family: inherit;
+  background-color: papayawhip;
+  padding: 0.5rem;
+  display: block;
+  border-radius: 5px;
+  border: 1px solid #000;
+  color: #000;
+  font-weight: bold;
+  margin: 1rem;
+}
+
+.form-actions button:hover {
+  background-color: #000;
+  color: #fff;
+}

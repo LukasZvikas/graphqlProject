@@ -10,6 +10,18 @@ const { isAuth } = require("./middleware/isAuth");
 
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-type, Authorization");
+
+  if (req.method === "OPTIONS") {
+    res.status(200).send();
+  }
+
+  next();
+});
+
 app.use(isAuth);
 
 app.use(
