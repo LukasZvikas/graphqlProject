@@ -1,25 +1,26 @@
-import React, { Component } from "react";
+import React, { useState, useRef } from "react";
 import "./Auth.css";
 
-class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { isLoggedIn: false, loginMode: true };
-    this.userNameEl = React.createRef();
-    this.emailEl = React.createRef();
-    this.passwordEl = React.createRef();
+const Login = () => {
+  const userNameEl = useRef();
+  const emailEl = useRef();
+  const passwordEl = useRef();
+
+  const [isLoggedIn, changeIsLoggedIn] = useState(false);
+  const [loginMode, changeLoginMode] = useState(true);
+
+  function changeAuthMode() {
+    changeLoginMode(!loginMode);
+
+    console.log("LOGIN", loginMode)
   }
 
-  changeAuthMode() {
-    this.setState({ loginMode: !this.state.loginMode });
-  }
-
-  async onFormSubmit(e) {
+  async function onFormSubmit(e) {
     e.preventDefault();
-
-    const userName = this.userNameEl.current.value;
-    const email = this.emailEl.current.value;
-    const password = this.passwordEl.current.value;
+    console.log("user", userNameEl);
+    const userName = userNameEl.current.value;
+    const email = emailEl.current.value;
+    const password = passwordEl.current.value;
 
     // if (email.trim().length === 0 || password.trim().length === 0) return;
 
@@ -38,7 +39,7 @@ class Login extends Component {
         `
     };
 
-    if (!this.state.loginMode) {
+    if (!loginMode) {
       requestBody = {
         query: `
                   mutation {
@@ -70,30 +71,28 @@ class Login extends Component {
     }
   }
 
-  render() {
-    return (
-      <form className="form" onSubmit={this.onFormSubmit.bind(this)}>
-        <div className="form-control">
-          <label htmlFor="text">Username</label>
-          <input type="text" id="text" ref={this.userNameEl} />
-        </div>
-        <div className="form-control">
-          <label htmlFor="email">Email</label>
-          <input type="email" id="email" ref={this.emailEl} />
-        </div>
-        <div className="form-control">
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" ref={this.passwordEl} />
-        </div>
-        <div className="form-actions">
-          <button type="button" onClick={this.changeAuthMode.bind(this)}>
-            Change to {this.state.loginMode ? "Login" : "Sign up"}
-          </button>
-          <button type="submit">Login</button>
-        </div>
-      </form>
-    );
-  }
-}
+  return (
+    <form className="form" onSubmit={(e) => onFormSubmit(e)}>
+      <div className="form-control">
+        <label htmlFor="text">Username</label>
+        <input type="text" id="text" ref={userNameEl} />
+      </div>
+      <div className="form-control">
+        <label htmlFor="email">Email</label>
+        <input type="email" id="email" ref={emailEl} />
+      </div>
+      <div className="form-control">
+        <label htmlFor="password">Password</label>
+        <input type="password" id="password" ref={passwordEl} />
+      </div>
+      <div className="form-actions">
+        <button type="button" onClick={() => changeAuthMode()}>
+          Change to {loginMode ? "Login" : "Sign up"}
+        </button>
+        <button type="submit">Login</button>
+      </div>
+    </form>
+  );
+};
 
 export default Login;
