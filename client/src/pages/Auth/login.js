@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useContext, useState, useRef } from "react";
+import AuthContext from "../../context/auth-context";
 import "./Auth.css";
 
 const Login = () => {
@@ -6,13 +7,12 @@ const Login = () => {
   const emailEl = useRef();
   const passwordEl = useRef();
 
-  const [isLoggedIn, changeIsLoggedIn] = useState(false);
+  const context = useContext(AuthContext);
+
   const [loginMode, changeLoginMode] = useState(true);
 
   function changeAuthMode() {
     changeLoginMode(!loginMode);
-
-    console.log("LOGIN", loginMode)
   }
 
   async function onFormSubmit(e) {
@@ -22,9 +22,12 @@ const Login = () => {
     const email = emailEl.current.value;
     const password = passwordEl.current.value;
 
-    // if (email.trim().length === 0 || password.trim().length === 0) return;
-
-    console.log(email, password);
+    if (
+      userName.trim().length === 0 ||
+      email.trim().length === 0 ||
+      password.trim().length === 0
+    )
+      return;
 
     let requestBody;
 
@@ -42,13 +45,13 @@ const Login = () => {
     if (!loginMode) {
       requestBody = {
         query: `
-                  mutation {
-                      createUser(userInput: {userName: "${userName}", password: "${password}", email: "${email}"}){
-                          _id
-                          email
-                      }
-                  }
-              `
+            mutation {
+                createUser(userInput: {userName: "${userName}", password: "${password}", email: "${email}"}){
+                    _id
+                    email
+                }
+            }
+          `
       };
     }
 
@@ -60,19 +63,26 @@ const Login = () => {
           "Content-Type": "application/json"
         }
       });
-      console.log(response.status);
       if (response.status !== 200 && response.status !== 201) {
         throw new Error("Request failed");
       }
 
-      console.log(await response.json());
+      const resData = await response.json();
+
+      console.log(resData.data);
+
+      const token = resData.data.loginUser.token;
+      const userId = resData.data.loginUser.userId;
+
+      context.login(token, userId);
+      console.log("context", context);
     } catch (error) {
       console.log(error);
     }
   }
 
   return (
-    <form className="form" onSubmit={(e) => onFormSubmit(e)}>
+    <form className="form" onSubmit={e => onFormSubmit(e)}>
       <div className="form-control">
         <label htmlFor="text">Username</label>
         <input type="text" id="text" ref={userNameEl} />
