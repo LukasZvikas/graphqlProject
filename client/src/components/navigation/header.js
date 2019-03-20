@@ -6,7 +6,7 @@ import AuthContext from "../../context/auth-context";
 const Header = ({}) => {
   return (
     <AuthContext.Consumer>
-      {({ token }) => {
+      {({ token, logout }) => {
         console.log("TOKEN", token);
         return (
           <div className="navigation">
@@ -28,6 +28,11 @@ const Header = ({}) => {
                 <li>
                   <NavLink to="/events">Events</NavLink>
                 </li>
+                {token && (
+                  <li>
+                    <button onClick={logout}>Logout</button>
+                  </li>
+                )}
               </ul>
             </nav>
           </div>

@@ -4,12 +4,12 @@ import "./Auth.css";
 
 const Login = () => {
   const userNameEl = useRef();
-  const emailEl = useRef();
+  const emailEl = !loginMode && useRef();
   const passwordEl = useRef();
 
   const context = useContext(AuthContext);
 
-  const [loginMode, changeLoginMode] = useState(true);
+  const [loginMode, changeLoginMode] = useState(false);
 
   function changeAuthMode() {
     changeLoginMode(!loginMode);
@@ -17,14 +17,13 @@ const Login = () => {
 
   async function onFormSubmit(e) {
     e.preventDefault();
-    console.log("user", userNameEl);
     const userName = userNameEl.current.value;
-    const email = emailEl.current.value;
+    const email = !loginMode && emailEl.current.value;
     const password = passwordEl.current.value;
 
     if (
       userName.trim().length === 0 ||
-      email.trim().length === 0 ||
+      (!loginMode && email.trim().length === 0) ||
       password.trim().length === 0
     )
       return;
@@ -33,13 +32,13 @@ const Login = () => {
 
     requestBody = {
       query: `
-            query {
-                loginUser(userName: "${userName}", password: "${password}"){
-                    userId
-                    token
-                }
+        query {
+            loginUser(userName: "${userName}", password: "${password}"){
+                userId
+                token
             }
-        `
+        }
+   `
     };
 
     if (!loginMode) {
@@ -87,19 +86,21 @@ const Login = () => {
         <label htmlFor="text">Username</label>
         <input type="text" id="text" ref={userNameEl} />
       </div>
-      <div className="form-control">
-        <label htmlFor="email">Email</label>
-        <input type="email" id="email" ref={emailEl} />
-      </div>
+      {!loginMode && (
+        <div className="form-control">
+          <label htmlFor="email">Email</label>
+          <input type="email" id="email" ref={emailEl} />
+        </div>
+      )}
       <div className="form-control">
         <label htmlFor="password">Password</label>
         <input type="password" id="password" ref={passwordEl} />
       </div>
       <div className="form-actions">
         <button type="button" onClick={() => changeAuthMode()}>
-          Change to {loginMode ? "Login" : "Sign up"}
+          Change to {!loginMode ? "Login" : "Sign up"}
         </button>
-        <button type="submit">Login</button>
+        <button type="submit">{loginMode ? "Login" : "Sign up"}</button>
       </div>
     </form>
   );

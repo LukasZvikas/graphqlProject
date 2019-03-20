@@ -20,15 +20,26 @@
 
 .navigation__links li {
   margin: 0 2rem;
+  font-size: 16px;
 }
 
-.navigation__links a {
+.navigation__links button {
+  border-radius: 10px;
+  background-color: papayawhip;
+  font-family: inherit;
+  border: 0px transparent;
+}
+
+.navigation__links a,
+.navigation__links button {
   text-decoration: none;
   color: #000;
   font-weight: bold;
+  font-size: 14px;
 }
 
 .navigation__links a:hover,
-.navigation__links a.active {
+.navigation__links a.active,
+.navigation__links button:hover {
   color: goldenrod;
 }
