@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Route, Switch } from "react-router-dom";
 import Header from "./components/navigation/header";
 import Login from "../src/pages/Auth/login";
-import EventsPage from "../src/pages/Events/events"
+import EventsPage from "../src/pages/Events"
 import AuthContext from "../src/context/auth-context";
 
 import "./App.css";

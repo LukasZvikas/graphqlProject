@@ -5,3 +5,20 @@ body {
 .main-content {
   margin: 5.5rem 2rem;
 }
+
+button {
+  font-family: inherit;
+  background-color: papayawhip;
+  padding: 0.5rem;
+  display: block;
+  border-radius: 5px;
+  border: 1px solid #000;
+  color: #000;
+  font-weight: bold;
+  margin: 1rem;
+}
+
+button:hover {
+  background-color: #000;
+  color: #fff;
+}

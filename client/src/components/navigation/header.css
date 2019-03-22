@@ -21,6 +21,9 @@
 .navigation__links li {
   margin: 0 2rem;
   font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .navigation__links button {
@@ -28,6 +31,7 @@
   background-color: papayawhip;
   font-family: inherit;
   border: 0px transparent;
+  margin: 0;
 }
 
 .navigation__links a,
